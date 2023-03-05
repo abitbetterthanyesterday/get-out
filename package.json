@@ -5,7 +5,8 @@
     "build": "remix build",
     "dev": "remix dev",
     "typecheck": "tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "e2e": "yarn dev & cypress open"
   },
   "dependencies": {
     "@remix-run/node": "^1.14.0",
@@ -19,12 +20,14 @@
     "@remix-run/dev": "^1.14.0",
     "@remix-run/eslint-config": "^1.14.0",
     "@remix-run/serve": "^1.14.0",
+    "@testing-library/cypress": "^9.0.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@types/testing-library__dom": "^7.5.0",
     "@vitejs/plugin-react": "^3.1.0",
+    "cypress": "^12.7.0",
     "eslint": "^8.27.0",
     "jsdom": "^21.1.0",
     "tailwindcss": "^3.2.7",
