@@ -1,9 +1,19 @@
-import type { ErrorCreateSpotForm, Spot } from "../utils/createSpot";
+import type { Spot } from "~/models/spot";
+import type { ErrorCreateSpotForm } from "../services/createSpot";
 export interface Props {
   errors?: ErrorCreateSpotForm | null;
   values?: Partial<Spot>;
 }
 
+export enum FormFields {
+  Name = "name",
+  Description = "description",
+  Latitude = "latitude",
+  Longitude = "longitude",
+  MinWind = "minWind",
+  MaxWind = "maxWind",
+  WindDirections = "windDirections",
+}
 const windDirections = [
   "north",
   "south",
@@ -25,8 +35,8 @@ export function AddSpotForm({ errors, values }: Props) {
             <span className="label-text">name</span>
           </label>
           <input
-            name="name"
-            id="name"
+            name={FormFields.Name}
+            id={FormFields.Name}
             type="text"
             defaultValue={values?.name}
             className="w-full max-w-xs input input-bordered"

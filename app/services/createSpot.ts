@@ -1,27 +1,22 @@
+import { FormFields } from "~/components/AddSpotForm";
+import type { Spot } from "~/models/spot";
+import type { SpotRepository } from "~/repositories/interfaces";
+
 const REQUIRED_MINIMUM_WIND_DIRECTIONS = 1;
-
-export interface Spot {
-  name: string;
-  description?: string;
-  latitude: number;
-  longitude: number;
-  windRange: [number, number];
-  windDirections: string[];
-}
-
-enum FormFields {
-  Name = "name",
-  Description = "description",
-  Latitude = "latitude",
-  Longitude = "longitude",
-  MinWind = "minWind",
-  MaxWind = "maxWind",
-  WindDirections = "windDirections",
-}
 
 export type ErrorCreateSpotForm = Partial<Record<keyof Spot, string>>;
 
-export const createSpot = (form: FormData) => {
+/**
+ * Create a spot
+ * Validate a form an create a spot if the form is valid.
+ *
+ * @parVam The form to fill. Must be compliant with the FormFields interface
+ * @returns [error, values] array containing the errors if any as the the first item of the array, the values passed as the second items
+ */
+export const createSpotService = (
+  form: FormData,
+  repository: SpotRepository
+) => {
   let errors: ErrorCreateSpotForm = {};
 
   // Name validation
@@ -73,7 +68,8 @@ export const createSpot = (form: FormData) => {
   }
 
   // Wind direction validation
-  const windDirections = form.getAll(FormFields.WindDirections) ?? [];
+  const windDirections: Spot["windDirections"] =
+    (form.getAll(FormFields.WindDirections) as Spot["windDirections"]) ?? [];
 
   if (windDirections.length < REQUIRED_MINIMUM_WIND_DIRECTIONS) {
     errors.windDirections = "At least one wind direction required";
@@ -81,16 +77,18 @@ export const createSpot = (form: FormData) => {
 
   // Result
   if (Object.values(errors).length > 0) {
+    // Invalid form
     return [errors as ErrorCreateSpotForm, null] as const;
   } else {
-    const spot = {
-      name,
+    // Valid form
+    const spot: Omit<Spot, "id"> = {
+      name: name as string,
       description,
       latitude: Number(latitude),
       longitude: Number(longitude),
       windRange: [Number(minWind), Number(maxWind)],
       windDirections,
-    } as Spot;
+    };
     return [null, spot] as const;
   }
 };

@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import type { ErrorCreateSpotForm, Spot } from "../utils/createSpot";
+import type { ErrorCreateSpotForm, Spot } from "../services/createSpot";
 import type { Props } from "./AddSpotForm";
 import { AddSpotForm } from "./AddSpotForm";
 

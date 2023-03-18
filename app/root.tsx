@@ -20,6 +20,7 @@ export const links: LinksFunction = () => [
 ];
 
 export default function App() {
+  AppLoadContext;
   return (
     <html lang="en">
       <head>

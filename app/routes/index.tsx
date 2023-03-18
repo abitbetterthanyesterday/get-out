@@ -1,6 +1,13 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
+import type { Spot } from "~/models/spot";
+import { DIContainer } from "~/repositories/container";
 
-export default function Index() {
+export async function loader() {
+  const spots = await DIContainer.spotRepository.findAll();
+  return spots;
+}
+export default async function Index() {
+  const spots = useLoaderData<typeof loader>() as Spot[];
   return (
     <main className="flex flex-col justify-center h-screen max-w-md gap-12 mx-auto">
       <div className="flex flex-col gap-4">
@@ -11,6 +18,11 @@ export default function Index() {
           What are you waiting for? Get out and get some fresh air!
         </h2>
       </div>
+      <>
+        {spots.map((spot) => (
+          <p key={spot.id}>{spot.name}</p>
+        ))}
+      </>
 
       <Link to="/add" className="btn">
         Add a spot
