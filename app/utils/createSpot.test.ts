@@ -6,7 +6,7 @@ describe("createSpot", () => {
   const createFormData = (fields: CreateSpotFormData): FormData => {
     const formData = new FormData();
     for (const [field, value] of Object.entries(fields)) {
-      formData.append(field, value);
+      formData.append(field, value.toString());
     }
     return formData;
   };
@@ -124,7 +124,7 @@ describe("createSpot", () => {
       expect(result).toBeNull();
     });
     it("should not return an error if there is at least one wind direction provided", () => {
-      const form = createFormData({ south: "true" });
+      const form = createFormData({ windDirections: ["true"] });
       const [errors, result] = createSpot(form);
       expect(errors?.windDirections).toBeUndefined();
       expect(result).toBeNull();
@@ -138,8 +138,7 @@ describe("createSpot", () => {
         description: "the best spot around town",
         latitude: "80.123",
         longitude: "-123.123",
-        south: "south",
-        southEast: "southEast",
+        windDirections: ["southEast", "south"],
         minWind: "1",
         maxWind: "2",
       };
@@ -148,7 +147,7 @@ describe("createSpot", () => {
         description: mySpot.description,
         latitude: Number(mySpot.latitude),
         longitude: Number(mySpot.longitude),
-        windDirections: ["southEast", "south"],
+        windDirections: ["southEast,south"],
         windRange: [1, 2],
       };
 

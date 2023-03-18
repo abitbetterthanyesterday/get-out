@@ -16,17 +16,8 @@ enum FormFields {
   Longitude = "longitude",
   MinWind = "minWind",
   MaxWind = "maxWind",
-  North = "north",
-  South = "south",
-  East = "east",
-  West = "west",
-  NorthEast = "northEast",
-  NorthWest = "northWest",
-  SouthEast = "southEast",
-  SouthWest = "southWest",
+  WindDirections = "windDirections",
 }
-
-export type CreateSpotFormData = Partial<Record<`${FormFields}`, string>>;
 
 export type ErrorCreateSpotForm = Partial<Record<keyof Spot, string>>;
 
@@ -82,31 +73,14 @@ export const createSpot = (form: FormData) => {
   }
 
   // Wind direction validation
-  const north = form.get(FormFields.North) as string | undefined;
-  const south = form.get(FormFields.South) as string | undefined;
-  const east = form.get(FormFields.East) as string | undefined;
-  const west = form.get(FormFields.West) as string | undefined;
-  const northEast = form.get(FormFields.NorthEast) as string | undefined;
-  const northWest = form.get(FormFields.NorthWest) as string | undefined;
-  const southEast = form.get(FormFields.SouthEast) as string | undefined;
-  const southWest = form.get(FormFields.SouthWest) as string | undefined;
-  const windDirections = [
-    north,
-    northEast,
-    east,
-    southEast,
-    south,
-    southWest,
-    west,
-    northWest,
-  ].filter((direction) => direction);
+  const windDirections = form.getAll(FormFields.WindDirections) ?? [];
 
   if (windDirections.length < REQUIRED_MINIMUM_WIND_DIRECTIONS) {
     errors.windDirections = "At least one wind direction required";
   }
 
   // Result
-  if (Object.values(errors).length > 1) {
+  if (Object.values(errors).length > 0) {
     return [errors as ErrorCreateSpotForm, null] as const;
   } else {
     const spot = {
