@@ -1,6 +1,6 @@
 import type { FormFields } from "~/components/AddSpotForm";
+import { DIContainer } from "~/db.server";
 import type { Spot } from "~/models/spot";
-import { DIContainer } from "~/repositories/container";
 import { createSpotService } from "./createSpot";
 
 describe("createSpot", () => {
@@ -16,143 +16,152 @@ describe("createSpot", () => {
   };
 
   describe("name", () => {
-    it("should return an error if the name is missing", () => {
+    it("should return an error if the name is missing", async () => {
       const form = createFormData({ name: "" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.name).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should return not return an an error if the name is present", () => {
+    it("should return not return an an error if the name is present", async () => {
       const form = createFormData({ name: "my-name" });
-      const [errors, _] = createSpotService(form, DIContainer.spotRepository);
+      const [errors, _] = await createSpotService(
+        form,
+        DIContainer.getInstance().spotRepository
+      );
       expect(errors?.name).toBeUndefined();
     });
   });
 
   describe("latitude", () => {
-    it("should return an error if the latitude is missing", () => {
+    it("should return an error if the latitude is missing", async () => {
       const form = createFormData({ latitude: "" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.latitude).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should return an error if the latitude is of the wrong form", () => {
+    it("should return an error if the latitude is of the wrong form", async () => {
       const form = createFormData({ latitude: "hello" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.latitude).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should return an error if the latitude is out of the boundaries", () => {
+    it("should return an error if the latitude is out of the boundaries", async () => {
       const form = createFormData({ latitude: "91" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.latitude).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should not return an error if the latitude is within -90 and 90", () => {
+    it("should not return an error if the latitude is within -90 and 90", async () => {
       const form = createFormData({ latitude: "90" });
-      const [errors, _] = createSpotService(form, DIContainer.spotRepository);
+      const [errors, _] = await createSpotService(
+        form,
+        DIContainer.getInstance().spotRepository
+      );
       expect(errors?.latitude).toBeUndefined();
     });
   });
 
   describe("longitude", () => {
-    it("should return an error if the longitude is missing", () => {
+    it("should return an error if the longitude is missing", async () => {
       const form = createFormData({ longitude: "" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.longitude).not.toBeNull();
       expect(result).toBeNull();
     });
-    it("should return an error if the longitude is of the wrong form", () => {
+    it("should return an error if the longitude is of the wrong form", async () => {
       const form = createFormData({ longitude: "hello" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.longitude).not.toBeNull();
       expect(result).toBeNull();
     });
-    it("should return an error if the longitude is out of the boundaries", () => {
+    it("should return an error if the longitude is out of the boundaries", async () => {
       const form = createFormData({ longitude: "181" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.longitude).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should not return an error if the longitude is within -90 and 90", () => {
+    it("should not return an error if the longitude is within -90 and 90", async () => {
       const form = createFormData({ longitude: "90" });
-      const [errors, _] = createSpotService(form, DIContainer.spotRepository);
+      const [errors, _] = await createSpotService(
+        form,
+        DIContainer.getInstance().spotRepository
+      );
       expect(errors?.longitude).toBeUndefined();
     });
   });
 
   describe("wind range", () => {
-    it("should return an error if the wind min is below 0", () => {
+    it("should return an error if the wind min is below 0", async () => {
       const form = createFormData({ minWind: "-1" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.windRange).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should return an error if the wind min is NaN", () => {
+    it("should return an error if the wind min is NaN", async () => {
       const form = createFormData({ minWind: "hello" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.windRange).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should return an error if the wind max is NaN", () => {
+    it("should return an error if the wind max is NaN", async () => {
       const form = createFormData({ maxWind: "hello" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.windRange).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should return an error if the min wind is missing", () => {
+    it("should return an error if the min wind is missing", async () => {
       const form = createFormData({});
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.windRange).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should return an error if the max wind is missing", () => {
+    it("should return an error if the max wind is missing", async () => {
       const form = createFormData({ minWind: "1" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.windRange).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should return an error if the min wind is above the max wind", () => {
+    it("should return an error if the min wind is above the max wind", async () => {
       const form = createFormData({ minWind: "2", maxWind: "1" });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.windRange).not.toBeUndefined();
       expect(result).toBeNull();
@@ -160,20 +169,20 @@ describe("createSpot", () => {
   });
 
   describe("wind directions", () => {
-    it("should have at least one wind direction", () => {
+    it("should have at least one wind direction", async () => {
       const form = createFormData({});
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.windDirections).not.toBeUndefined();
       expect(result).toBeNull();
     });
-    it("should not return an error if there is at least one wind direction provided", () => {
+    it("should not return an error if there is at least one wind direction provided", async () => {
       const form = createFormData({ windDirections: ["true"] });
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors?.windDirections).toBeUndefined();
       expect(result).toBeNull();
@@ -181,7 +190,7 @@ describe("createSpot", () => {
   });
 
   describe("valid form submission", () => {
-    it("should return no error and the spot if the form is valid", () => {
+    it("should return no error and the spot if the form is valid", async () => {
       const mySpot = {
         name: "my-spot",
         description: "the best spot around town",
@@ -201,12 +210,12 @@ describe("createSpot", () => {
       };
 
       const form = createFormData(mySpot);
-      const [errors, result] = createSpotService(
+      const [errors, result] = await createSpotService(
         form,
-        DIContainer.spotRepository
+        DIContainer.getInstance().spotRepository
       );
       expect(errors).toBeNull();
-      expect(result).toStrictEqual(expectedResult);
+      expect(result).toEqual(expect.objectContaining(expectedResult));
     });
   });
 });

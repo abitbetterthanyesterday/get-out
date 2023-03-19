@@ -1,12 +1,12 @@
 import { Link, useLoaderData } from "@remix-run/react";
+import { DIContainer } from "~/db.server";
 import type { Spot } from "~/models/spot";
-import { DIContainer } from "~/repositories/container";
 
 export async function loader() {
-  const spots = await DIContainer.spotRepository.findAll();
+  const spots = DIContainer.getInstance().spotRepository.findAll();
   return spots;
 }
-export default async function Index() {
+export default function Index() {
   const spots = useLoaderData<typeof loader>() as Spot[];
   return (
     <main className="flex flex-col justify-center h-screen max-w-md gap-12 mx-auto">

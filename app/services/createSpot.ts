@@ -13,7 +13,7 @@ export type ErrorCreateSpotForm = Partial<Record<keyof Spot, string>>;
  * @parVam The form to fill. Must be compliant with the FormFields interface
  * @returns [error, values] array containing the errors if any as the the first item of the array, the values passed as the second items
  */
-export const createSpotService = (
+export const createSpotService = async (
   form: FormData,
   repository: SpotRepository
 ) => {
@@ -81,7 +81,7 @@ export const createSpotService = (
     return [errors as ErrorCreateSpotForm, null] as const;
   } else {
     // Valid form
-    const spot: Omit<Spot, "id"> = {
+    const values: Omit<Spot, "id"> = {
       name: name as string,
       description,
       latitude: Number(latitude),
@@ -89,6 +89,12 @@ export const createSpotService = (
       windRange: [Number(minWind), Number(maxWind)],
       windDirections,
     };
-    return [null, spot] as const;
+    try {
+      const spot = await repository.create(values);
+      return [null, spot] as const;
+    } catch (e) {
+      // TODO general issue here to handle
+      return [errors, values] as const;
+    }
   }
 };
