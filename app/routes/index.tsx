@@ -1,4 +1,5 @@
 import { Link, useLoaderData } from "@remix-run/react";
+
 import { DIContainer } from "~/db.server";
 import type { Spot } from "~/models/spot";
 
