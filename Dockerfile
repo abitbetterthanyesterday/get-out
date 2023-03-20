@@ -1,5 +1,5 @@
 FROM node:19-alpine3.16
-WORKDIR /usr/get-out/
+WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
