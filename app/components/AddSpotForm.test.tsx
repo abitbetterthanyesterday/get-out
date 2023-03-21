@@ -1,14 +1,20 @@
+import { render, screen } from "@testing-library/react";
 import type {
   CreateSpot,
   ErrorCreateSpotForm,
 } from "../services/createSpotService";
-import { render, screen } from "@testing-library/react";
 
-import { AddSpotForm } from "./AddSpotForm";
+import type { Spot } from "@prisma/client";
+import { MemoryRouter } from "react-router";
 import type { Props } from "./AddSpotForm";
-import { Spot } from "@prisma/client";
+import { AddSpotForm } from "./AddSpotForm";
 
 describe("Add", () => {
+  // Test wrapper that includes the router
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <MemoryRouter>{children}</MemoryRouter>
+  );
+
   const defaultProps: Props = {
     errors: {},
     values: {},
@@ -48,28 +54,30 @@ describe("Add", () => {
     },
     {
       type: "checkbox",
-      name: "windDirections-north-east",
+      name: "windDirections-northEast",
     },
     {
       type: "checkbox",
-      name: "windDirections-north-west",
+      name: "windDirections-northWest",
     },
     {
       type: "checkbox",
-      name: "windDirections-south-east",
+      name: "windDirections-southEast",
     },
     {
       type: "checkbox",
-      name: "windDirections-south-west",
+      name: "windDirections-southWest",
     },
   ];
 
   it("should render", () => {
-    expect(() => render(<AddSpotForm {...defaultProps} />)).not.toThrow();
+    expect(() =>
+      render(<AddSpotForm {...defaultProps} />, { wrapper })
+    ).not.toThrow();
   });
   it("should have the form and the right inputs", () => {
     // Arrange
-    render(<AddSpotForm {...defaultProps} />);
+    render(<AddSpotForm {...defaultProps} />, { wrapper });
 
     // Assert
     for (const { type, name } of inputs) {
@@ -98,7 +106,7 @@ describe("Add", () => {
         "northWest",
       ],
     };
-    render(<AddSpotForm {...{ ...defaultProps, values }} />);
+    render(<AddSpotForm {...{ ...defaultProps, values }} />, { wrapper });
 
     expect(screen.getByRole("textbox", { name: /name/i })).toHaveValue(
       values.name
@@ -133,7 +141,7 @@ describe("Add", () => {
     ];
     inputs.forEach((input) => (errors[input] = `${input} error`));
 
-    render(<AddSpotForm errors={errors} />);
+    render(<AddSpotForm errors={errors} />, { wrapper });
     const submitButton = screen.getByRole("button", { name: /add/i });
 
     // Act

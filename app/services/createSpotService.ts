@@ -1,4 +1,4 @@
-import { Prisma, WindDirections } from "@prisma/client";
+import type { Prisma, WindDirections } from "@prisma/client";
 
 import { FormFields } from "~/components/AddSpotForm";
 import { spotModel } from "~/models/spot.server";
@@ -55,16 +55,23 @@ export const createSpotService = async (form: FormData) => {
   //Wind range
   const minWind = form.get(FormFields.MinWind) as string;
   const maxWind = form.get(FormFields.MaxWind) as string;
+
+  if (Number(minWind) > Number(maxWind)) {
+    errors.windStrengthMin = "Minimum wind can't be higher than maximum wind";
+  }
+
   if (!minWind) {
     errors.windStrengthMin = "Minimum wind is required";
-  } else if (!maxWind) {
-    errors.windStrenghtMax = "Minimum wind is required";
-  } else if (isNaN(Number(minWind)) || isNaN(Number(maxWind))) {
+  } else if (isNaN(Number(minWind))) {
     errors.windStrengthMin = "Minimum wind and maximum wind must be numbers.";
   } else if (Number(minWind) < 0) {
     errors.windStrengthMin = "Minimum wind must be a number above 0.";
-  } else if (Number(minWind) > Number(maxWind)) {
-    errors.windStrengthMin = "Minimum wind can't be higher than minimum wind";
+  }
+
+  if (!maxWind) {
+    errors.windStrenghtMax = "Maximum wind is required";
+  } else if (isNaN(Number(maxWind))) {
+    errors.windStrenghtMax = "Minimum wind and maximum wind must be numbers.";
   }
 
   // Wind direction validation
@@ -86,7 +93,7 @@ export const createSpotService = async (form: FormData) => {
     // Valid form
     const values: Prisma.SpotCreateInput = {
       name: name as string,
-      description: description ?? '',
+      description: description ?? "",
       latitude: Number(latitude),
       longitude: Number(longitude),
       windStrenghtMax: Number(maxWind),

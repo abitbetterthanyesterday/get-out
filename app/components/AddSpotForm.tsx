@@ -110,17 +110,18 @@ export function AddSpotForm({ errors, values }: Props) {
             className="w-full input input-bordered"
           />
           {(errors?.windStrenghtMax || errors?.windStrengthMin) && (
-            <p className={"text-error"}>
-              {errors.windStrengthMin || errors.windStrengthMin}
-            </p>
+            <>
+              <p className={"text-error"}>{errors.windStrengthMin}</p>
+              <p className={"text-error"}>{errors.windStrenghtMax}</p>
+            </>
           )}
         </div>
         <h3>Directions</h3>
         <div className="grid grid-cols-3">
           {Object.values(WindDirections).map((direction, index) => (
-            <>
+            <div key={direction}>
               {index === 4 && <div></div>}
-              <div className="items-center form-control" key={direction}>
+              <div className="items-center form-control">
                 <label
                   className="cursor-pointer label"
                   htmlFor={`windDirections-${direction}`}
@@ -141,7 +142,7 @@ export function AddSpotForm({ errors, values }: Props) {
                   className="self-center cursor-pointer checkbox checkbox-primary"
                 />
               </div>
-            </>
+            </div>
           ))}
           {errors?.windDirections && (
             <p className={"text-error"}>{errors.windDirections}</p>

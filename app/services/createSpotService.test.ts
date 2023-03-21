@@ -1,5 +1,4 @@
 import type { FormFields } from "~/components/AddSpotForm";
-import { Prisma } from "@prisma/client";
 import { createSpotService } from "./createSpotService";
 
 describe("createSpot", () => {
