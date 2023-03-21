@@ -11,29 +11,30 @@ datasource db {
 }
 
 enum WindStrengthUnit {
-   knots
+  knots
 }
 
 enum WindDirections {
-   north
-   northEast
-   east
-   southEast
-   south
-   southWest
-   west
-   northWest
+  north
+  northEast
+  east
+  southEast
+  south
+  southWest
+  west
+  northWest
 }
+
 model Spot {
-  id               Int      @id @default(autoincrement())
+  id               Int              @id @default(autoincrement())
   name             String
-description      String 
+  description      String
   latitude         Float
   longitude        Float
   windStrengthUnit WindStrengthUnit
   windStrenghtMax  Float
   windStrengthMin  Float
-  windDirections     WindDirections[]
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  windDirections   WindDirections[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 }

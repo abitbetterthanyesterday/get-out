@@ -1,4 +1,6 @@
-import { Prisma, Spot, WindDirections } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
+import { WindDirections } from "@prisma/client";
+import { Link } from "@remix-run/react";
 
 import type { ErrorCreateSpotForm } from "~/services/createSpotService";
 
@@ -130,7 +132,11 @@ export function AddSpotForm({ errors, values }: Props) {
                   aria-label={`windDirections-${direction}`}
                   id={`windDirections-${direction}`}
                   value={direction}
-                  defaultChecked={(values?.windDirections as Prisma.Enumerable<WindDirections> | undefined)?.includes(direction)}
+                  defaultChecked={(
+                    values?.windDirections as
+                      | Prisma.Enumerable<WindDirections>
+                      | undefined
+                  )?.includes(direction)}
                   type="checkbox"
                   className="self-center cursor-pointer checkbox checkbox-primary"
                 />
@@ -146,9 +152,14 @@ export function AddSpotForm({ errors, values }: Props) {
         <button type="submit" className="btn btn-primary">
           Add
         </button>
-        <button type="submit" className="btn btn-outline btn-secondary">
+        <Link
+          role="button"
+          type="submit"
+          className="btn btn-outline btn-secondary"
+          to="/"
+        >
           cancel
-        </button>
+        </Link>
       </div>
     </div>
   );
