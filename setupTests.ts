@@ -17,4 +17,4 @@ afterEach(() => {
 });
 
 // Clean up after the tests are finished.
-afterAll(() => );
+afterAll(() => {});

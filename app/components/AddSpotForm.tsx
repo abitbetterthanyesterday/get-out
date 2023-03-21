@@ -1,8 +1,10 @@
-import type { ErrorCreateSpotForm } from "../services/createSpotService";
-import type { Spot } from "~/models/spot.server";
+import { Prisma, Spot, WindDirections } from "@prisma/client";
+
+import type { ErrorCreateSpotForm } from "~/services/createSpotService";
+
 export interface Props {
   errors?: ErrorCreateSpotForm | null;
-  values?: Partial<Spot>;
+  values?: Partial<Prisma.SpotCreateInput>;
 }
 
 export enum FormFields {
@@ -14,16 +16,6 @@ export enum FormFields {
   MaxWind = "maxWind",
   WindDirections = "windDirections",
 }
-const windDirections = [
-  "north-west",
-  "north",
-  "north-east",
-  "west",
-  "east",
-  "south-west",
-  "south",
-  "south-east",
-];
 
 export function AddSpotForm({ errors, values }: Props) {
   return (
@@ -53,7 +45,7 @@ export function AddSpotForm({ errors, values }: Props) {
             name="description"
             id="description"
             className="w-full input input-bordered"
-            defaultValue={values?.description}
+            defaultValue={values?.description ?? ""}
           />
           {errors?.description && (
             <p className={"text-error"}>{errors.description}</p>
@@ -99,7 +91,7 @@ export function AddSpotForm({ errors, values }: Props) {
             aria-label="minWind"
             id="minWind"
             type="number"
-            defaultValue={values?.windRange?.at(0)}
+            defaultValue={values?.windStrengthMin}
             className="w-full input input-bordered"
           />
         </div>
@@ -112,16 +104,18 @@ export function AddSpotForm({ errors, values }: Props) {
             id="maxWind"
             aria-label="maxWind"
             type="number"
-            defaultValue={values?.windRange?.at(-1)}
+            defaultValue={values?.windStrenghtMax}
             className="w-full input input-bordered"
           />
-          {errors?.windRange && (
-            <p className={"text-error"}>{errors.windRange}</p>
+          {(errors?.windStrenghtMax || errors?.windStrengthMin) && (
+            <p className={"text-error"}>
+              {errors.windStrengthMin || errors.windStrengthMin}
+            </p>
           )}
         </div>
         <h3>Directions</h3>
         <div className="grid grid-cols-3">
-          {windDirections.map((direction, index) => (
+          {Object.values(WindDirections).map((direction, index) => (
             <>
               {index === 4 && <div></div>}
               <div className="items-center form-control" key={direction}>
@@ -136,7 +130,7 @@ export function AddSpotForm({ errors, values }: Props) {
                   aria-label={`windDirections-${direction}`}
                   id={`windDirections-${direction}`}
                   value={direction}
-                  defaultChecked={values?.windDirections?.includes(direction)}
+                  defaultChecked={(values?.windDirections as Prisma.Enumerable<WindDirections> | undefined)?.includes(direction)}
                   type="checkbox"
                   className="self-center cursor-pointer checkbox checkbox-primary"
                 />

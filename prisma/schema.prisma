@@ -10,18 +10,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum WindStrengthUnit {
+   knots
+}
+
+enum WindDirections {
+   north
+   northEast
+   east
+   southEast
+   south
+   southWest
+   west
+   northWest
+}
 model Spot {
   id               Int      @id @default(autoincrement())
   name             String
-  description      String?
-  latitude         Decimal
-  longitude        Decimal
-  windStrengthUnit Decimal
-  windStrenghtMax  Decimal
-  windStrengthMin  Decimal
-  windAzimuthUnit  Decimal
-  windAzimuthMax   Decimal
-  windAzimuthMin   Decimal
+description      String 
+  latitude         Float
+  longitude        Float
+  windStrengthUnit WindStrengthUnit
+  windStrenghtMax  Float
+  windStrengthMin  Float
+  windDirections     WindDirections[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }

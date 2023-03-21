@@ -1,14 +1,24 @@
 // app/utils/prisma.server.ts
+import { DeepMockProxy, mockDeep } from "vitest-mock-extended";
+
 import { PrismaClient } from "@prisma/client";
 
 let prisma: PrismaClient;
 declare global {
   var __db: PrismaClient | undefined;
 }
+export type Context = {
+  prisma: PrismaClient;
+};
+export type MockContext = {
+  prisma: DeepMockProxy<PrismaClient>;
+};
 
 if (process.env.NODE_ENV === "production") {
   prisma = new PrismaClient();
   prisma.$connect();
+} else if (process.env.NODE_ENV === "test") {
+  prisma = mockDeep<PrismaClient>();
 } else {
   if (!global.__db) {
     global.__db = new PrismaClient();

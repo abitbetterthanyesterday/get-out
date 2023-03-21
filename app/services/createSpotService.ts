@@ -1,12 +1,13 @@
-import { Spot, spotModel } from "~/models/spot.server";
-import { getMaxAzimuth, getMinAzimuth } from "~/utils/wind";
+import { Prisma, WindDirections } from "@prisma/client";
 
 import { FormFields } from "~/components/AddSpotForm";
-import { Prisma } from "@prisma/client";
+import { spotModel } from "~/models/spot.server";
 
 const REQUIRED_MINIMUM_WIND_DIRECTIONS = 1;
 
-export type ErrorCreateSpotForm = Partial<Record<keyof Spot, string>>;
+type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
+export type ErrorCreateSpotForm = Partial<Record<keyof CreateSpot, string>>;
+export type CreateSpot = UnwrapPromise<ReturnType<typeof spotModel.create>>;
 
 /**
  * Create a spot
@@ -55,23 +56,23 @@ export const createSpotService = async (form: FormData) => {
   const minWind = form.get(FormFields.MinWind) as string;
   const maxWind = form.get(FormFields.MaxWind) as string;
   if (!minWind) {
-    errors.windRange = "Minimum wind is required";
+    errors.windStrengthMin = "Minimum wind is required";
   } else if (!maxWind) {
-    errors.windRange = "Minimum wind is required";
+    errors.windStrenghtMax = "Minimum wind is required";
   } else if (isNaN(Number(minWind)) || isNaN(Number(maxWind))) {
-    errors.windRange = "Minimum wind and maximum wind must be numbers.";
+    errors.windStrengthMin = "Minimum wind and maximum wind must be numbers.";
   } else if (Number(minWind) < 0) {
-    errors.windRange = "Minimum wind must be a number above 0.";
+    errors.windStrengthMin = "Minimum wind must be a number above 0.";
   } else if (Number(minWind) > Number(maxWind)) {
-    errors.windRange = "Minimum wind can't be higher than minimum wind";
+    errors.windStrengthMin = "Minimum wind can't be higher than minimum wind";
   }
 
   // Wind direction validation
-  const windDirections: Spot["windDirections"] =
-    form
+  const windDirections: WindDirections[] =
+    (form
       .getAll(FormFields.WindDirections)
       .map((i) => i.toString().split(","))
-      .flat() ?? [];
+      .flat() as WindDirections[]) ?? [];
 
   if (windDirections.length < REQUIRED_MINIMUM_WIND_DIRECTIONS) {
     errors.windDirections = "At least one wind direction required";
@@ -85,19 +86,17 @@ export const createSpotService = async (form: FormData) => {
     // Valid form
     const values: Prisma.SpotCreateInput = {
       name: name as string,
-      description,
+      description: description ?? '',
       latitude: Number(latitude),
       longitude: Number(longitude),
       windStrenghtMax: Number(maxWind),
       windStrengthMin: Number(minWind),
       windStrengthUnit: "knots",
-      windAzimuthMax: getMaxAzimuth(windDirections),
-      windAzimuthMin: getMinAzimuth(windDirections),
-      windAzimuthUnit: "degrees",
+      windDirections,
     };
     try {
-      const spot = await spotModel.create(values);
-      return [null, spot] as const;
+      await spotModel.create(values);
+      return [null, values] as const;
     } catch (e) {
       // TODO general issue here to handle
       return [errors, values] as const;

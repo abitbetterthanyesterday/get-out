@@ -3,13 +3,17 @@ services:
   ui:
     image: get-out:dev
     restart: always
+    container_name: get-out
     ports:
       - "3000:3000"
     volumes:
       - ./app:/usr/get-out/app
+    depends_on:
+      - db
   db:
     image: postgres:latest
     restart: always
+    container_name: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mypassword

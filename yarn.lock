@@ -9065,6 +9065,11 @@ trough@^2.0.0:
   resolved "https://registry.yarnpkg.com/trough/-/trough-2.1.0.tgz#0f7b511a4fde65a46f18477ab38849b22c554876"
   integrity sha512-AqTiAOLcj85xS7vQ8QkAV41hPDIJ71XJB4RCUrzo/1GM2CQwhkJGaf9Hgr7BOugMRpgGUrqRg/DrBDl4H40+8g==
 
+ts-essentials@^9.3.1:
+  version "9.3.1"
+  resolved "https://registry.yarnpkg.com/ts-essentials/-/ts-essentials-9.3.1.tgz#f2d1e1584ef53c0251012258338421d7cf78a4d0"
+  integrity sha512-9CChSvQMyVRo29Vb1A2jbs+LKo3d/bAf+ndSaX0T8cEiy/HChVaRN/HY5DqUryZ8hZ6uol9bEgCnGmnDbwBR9Q==
+
 ts-morph@12.0.0:
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/ts-morph/-/ts-morph-12.0.0.tgz#a601c3538703755cbfa2d42b62c52df73e9dbbd7"
@@ -9516,6 +9521,13 @@ vite-node@^0.28.5:
     rollup "^3.18.0"
   optionalDependencies:
     fsevents "~2.3.2"
+
+vitest-mock-extended@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/vitest-mock-extended/-/vitest-mock-extended-1.1.3.tgz#1647b554c390e6673c4f14036086e366117c8f47"
+  integrity sha512-MiaKYZbTg+fjozKnCpoTTva0BnlSNYyk4jiPuM2xVhg4aou112QIrALdH3/ZKK6qfXWh0A17gFIjWJjylOlXxg==
+  dependencies:
+    ts-essentials "^9.3.1"
 
 vitest@^0.29.2:
   version "0.29.3"

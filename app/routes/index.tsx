@@ -1,14 +1,13 @@
 import { Link, useLoaderData } from "@remix-run/react";
 
-import { DIContainer } from "~/db.server";
-import type { Spot } from "~/models/spot.server";
+import { prisma } from "~/db.server";
 
 export async function loader() {
-  const spots = DIContainer.getInstance().spotRepository.findAll();
+  const spots = await prisma.spot.findMany();
   return spots;
 }
 export default function Index() {
-  const spots = useLoaderData<typeof loader>() as Spot[];
+  const spots = useLoaderData<typeof loader>();
   return (
     <main className="flex flex-col justify-center h-screen max-w-md gap-12 mx-auto">
       <div className="flex flex-col gap-4">

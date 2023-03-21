@@ -1,10 +1,10 @@
 import { Form, useActionData } from "@remix-run/react";
+import { Prisma, Spot } from "@prisma/client";
 
 import type { ActionArgs } from "@remix-run/node";
 import { AddSpotForm } from "~/components/AddSpotForm";
-import type { ErrorCreateSpotForm } from "~/services/createSpot";
-import type { Spot } from "~/models/spot.server";
-import { createSpotService } from "~/services/createSpot";
+import type { ErrorCreateSpotForm } from "~/services/createSpotService";
+import { createSpotService } from "~/services/createSpotService";
 import { redirect } from "@remix-run/node";
 
 export async function action({ request }: ActionArgs) {
@@ -17,10 +17,12 @@ export async function action({ request }: ActionArgs) {
   return redirect("/");
 }
 
+// type unwrapp promise
+
 export default function Add() {
   const actionData = useActionData<{
     errors: ErrorCreateSpotForm;
-    values: Spot;
+    values: Prisma.SpotCreateInput;
   }>();
   return (
     <Form role="form" method="post" className="max-w-sm mx-auto prose">

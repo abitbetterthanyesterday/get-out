@@ -1,8 +1,12 @@
-import type { ErrorCreateSpotForm, Spot } from "../services/createSpotService";
+import type {
+  CreateSpot,
+  ErrorCreateSpotForm,
+} from "../services/createSpotService";
 import { render, screen } from "@testing-library/react";
 
 import { AddSpotForm } from "./AddSpotForm";
 import type { Props } from "./AddSpotForm";
+import { Spot } from "@prisma/client";
 
 describe("Add", () => {
   const defaultProps: Props = {
@@ -76,17 +80,18 @@ describe("Add", () => {
   });
 
   it("should render with the default values", () => {
-    const values: Spot = {
+    const values: Partial<CreateSpot> = {
       name: "my great spot",
       description: "awesome local spot",
       longitude: 123,
       latitude: 80,
-      windRange: [2, 4],
+      windStrengthMin: 2,
+      windStrenghtMax: 4,
       windDirections: [
         "north",
-        "north-east",
+        "northEast",
         "east",
-        "south-east",
+        "southEast",
         "south",
         "southWest",
         "west",
@@ -102,16 +107,16 @@ describe("Add", () => {
       values.description
     );
     expect(screen.getByRole("textbox", { name: /latitude/i })).toHaveValue(
-      values.latitude.toString()
+      values.latitude?.toString()
     );
     expect(screen.getByRole("textbox", { name: /longitude/i })).toHaveValue(
-      values.longitude.toString()
+      values.longitude?.toString()
     );
     expect(screen.getByRole("spinbutton", { name: /min.*wind/i })).toHaveValue(
-      Number(values.windRange[0].toString())
+      Number(values.windStrengthMin?.toString())
     );
     expect(screen.getByRole("spinbutton", { name: /max.*wind/i })).toHaveValue(
-      Number(values.windRange[1].toString())
+      Number(values.windStrenghtMax?.toString())
     );
   });
   it("should show a validation errors", async () => {
@@ -122,7 +127,8 @@ describe("Add", () => {
       "description",
       "latitude",
       "longitude",
-      "windRange",
+      "windStrengthMin",
+      "windStrenghtMax",
       "windDirections",
     ];
     inputs.forEach((input) => (errors[input] = `${input} error`));

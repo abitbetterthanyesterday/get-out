@@ -1,6 +1,5 @@
-import { DIContainer } from "~/db.server";
 import type { FormFields } from "~/components/AddSpotForm";
-import type { Spot } from "~/models/spot.server";
+import { Prisma } from "@prisma/client";
 import { createSpotService } from "./createSpotService";
 
 describe("createSpot", () => {
@@ -85,37 +84,37 @@ describe("createSpot", () => {
     it("should return an error if the wind min is below 0", async () => {
       const form = createFormData({ minWind: "-1" });
       const [errors, result] = await createSpotService(form);
-      expect(errors?.windRange).not.toBeUndefined();
+      expect(errors?.windStrengthMin).not.toBeUndefined();
       expect(result).toBeNull();
     });
     it("should return an error if the wind min is NaN", async () => {
       const form = createFormData({ minWind: "hello" });
       const [errors, result] = await createSpotService(form);
-      expect(errors?.windRange).not.toBeUndefined();
+      expect(errors?.windStrengthMin).not.toBeUndefined();
       expect(result).toBeNull();
     });
     it("should return an error if the wind max is NaN", async () => {
       const form = createFormData({ maxWind: "hello" });
       const [errors, result] = await createSpotService(form);
-      expect(errors?.windRange).not.toBeUndefined();
+      expect(errors?.windStrenghtMax).not.toBeUndefined();
       expect(result).toBeNull();
     });
     it("should return an error if the min wind is missing", async () => {
       const form = createFormData({});
       const [errors, result] = await createSpotService(form);
-      expect(errors?.windRange).not.toBeUndefined();
+      expect(errors?.windStrengthMin).not.toBeUndefined();
       expect(result).toBeNull();
     });
     it("should return an error if the max wind is missing", async () => {
       const form = createFormData({ minWind: "1" });
       const [errors, result] = await createSpotService(form);
-      expect(errors?.windRange).not.toBeUndefined();
+      expect(errors?.windStrenghtMax).not.toBeUndefined();
       expect(result).toBeNull();
     });
     it("should return an error if the min wind is above the max wind", async () => {
       const form = createFormData({ minWind: "2", maxWind: "1" });
       const [errors, result] = await createSpotService(form);
-      expect(errors?.windRange).not.toBeUndefined();
+      expect(errors?.windStrengthMin).not.toBeUndefined();
       expect(result).toBeNull();
     });
   });
@@ -146,13 +145,14 @@ describe("createSpot", () => {
         minWind: "1",
         maxWind: "2",
       };
-      const expectedResult: Omit<Spot, "id"> = {
+      const expectedResult = {
         name: mySpot.name,
         description: mySpot.description,
         latitude: Number(mySpot.latitude),
         longitude: Number(mySpot.longitude),
-        windDirections: ["south-east,south"],
-        windRange: [1, 2],
+        windDirections: ["south-east", "south"],
+        windStrenghtMax: 2,
+        windStrengthMin: 1,
       };
 
       const form = createFormData(mySpot);
