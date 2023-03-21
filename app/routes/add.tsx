@@ -1,18 +1,15 @@
-import type { ActionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
+
+import type { ActionArgs } from "@remix-run/node";
 import { AddSpotForm } from "~/components/AddSpotForm";
-import { DIContainer } from "~/db.server";
-import type { Spot } from "~/models/spot";
 import type { ErrorCreateSpotForm } from "~/services/createSpot";
+import type { Spot } from "~/models/spot.server";
 import { createSpotService } from "~/services/createSpot";
+import { redirect } from "@remix-run/node";
 
 export async function action({ request }: ActionArgs) {
   const body = await request.formData();
-  const [errors, values] = await createSpotService(
-    body,
-    DIContainer.getInstance().spotRepository
-  );
+  const [errors, values] = await createSpotService(body);
   if (errors) {
     return { errors, values };
   }

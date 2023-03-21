@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { DIContainer } from "~/db.server";
-import type { Spot } from "~/models/spot";
+import type { Spot } from "~/models/spot.server";
 
 export async function loader() {
   const spots = DIContainer.getInstance().spotRepository.findAll();

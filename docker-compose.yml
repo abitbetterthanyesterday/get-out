@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  ui:
+    image: get-out:dev
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/usr/get-out/app
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DATABASES=dev,test
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./scripts/:/docker-entrypoint-initdb.d

@@ -15,7 +15,7 @@
     "e2e:ci": "start-server-and-test dev http://localhost:3000 \"npx cypress run\""
   },
   "dependencies": {
-    "@prisma/client": "4.11.0",
+    "@prisma/client": "^4.11.0",
     "@remix-run/node": "^1.14.0",
     "@remix-run/react": "^1.14.0",
     "@remix-run/vercel": "^1.14.0",

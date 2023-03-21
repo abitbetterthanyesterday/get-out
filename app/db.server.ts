@@ -1,23 +1,20 @@
-import { InMemorySpotRepository } from "./repositories/inMemory";
-import type { SpotRepository } from "./repositories/interfaces";
+// app/utils/prisma.server.ts
+import { PrismaClient } from "@prisma/client";
 
+let prisma: PrismaClient;
 declare global {
-  var DIContainer: DIContainer;
+  var __db: PrismaClient | undefined;
 }
 
-// Create a singleton instance of the DIContainer
-// This provides a single point of access to the repositories
-export class DIContainer {
-  public spotRepository: SpotRepository;
-
-  private constructor() {
-    this.spotRepository = new InMemorySpotRepository();
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient();
+  prisma.$connect();
+} else {
+  if (!global.__db) {
+    global.__db = new PrismaClient();
+    global.__db.$connect();
   }
-
-  public static getInstance() {
-    if (!global.DIContainer) {
-      global.DIContainer = new DIContainer();
-    }
-    return global.DIContainer;
-  }
+  prisma = global.__db;
 }
+
+export { prisma };

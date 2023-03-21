@@ -1,6 +1,8 @@
+import { Spot, spotModel } from "~/models/spot.server";
+import { getMaxAzimuth, getMinAzimuth } from "~/utils/wind";
+
 import { FormFields } from "~/components/AddSpotForm";
-import type { Spot } from "~/models/spot";
-import type { SpotRepository } from "~/repositories/interfaces";
+import { Prisma } from "@prisma/client";
 
 const REQUIRED_MINIMUM_WIND_DIRECTIONS = 1;
 
@@ -13,10 +15,7 @@ export type ErrorCreateSpotForm = Partial<Record<keyof Spot, string>>;
  * @parVam The form to fill. Must be compliant with the FormFields interface
  * @returns [error, values] array containing the errors if any as the the first item of the array, the values passed as the second items
  */
-export const createSpotService = async (
-  form: FormData,
-  repository: SpotRepository
-) => {
+export const createSpotService = async (form: FormData) => {
   let errors: ErrorCreateSpotForm = {};
 
   // Name validation
@@ -69,7 +68,10 @@ export const createSpotService = async (
 
   // Wind direction validation
   const windDirections: Spot["windDirections"] =
-    (form.getAll(FormFields.WindDirections) as Spot["windDirections"]) ?? [];
+    form
+      .getAll(FormFields.WindDirections)
+      .map((i) => i.toString().split(","))
+      .flat() ?? [];
 
   if (windDirections.length < REQUIRED_MINIMUM_WIND_DIRECTIONS) {
     errors.windDirections = "At least one wind direction required";
@@ -81,16 +83,20 @@ export const createSpotService = async (
     return [errors as ErrorCreateSpotForm, null] as const;
   } else {
     // Valid form
-    const values: Omit<Spot, "id"> = {
+    const values: Prisma.SpotCreateInput = {
       name: name as string,
       description,
       latitude: Number(latitude),
       longitude: Number(longitude),
-      windRange: [Number(minWind), Number(maxWind)],
-      windDirections,
+      windStrenghtMax: Number(maxWind),
+      windStrengthMin: Number(minWind),
+      windStrengthUnit: "knots",
+      windAzimuthMax: getMaxAzimuth(windDirections),
+      windAzimuthMin: getMinAzimuth(windDirections),
+      windAzimuthUnit: "degrees",
     };
     try {
-      const spot = await repository.create(values);
+      const spot = await spotModel.create(values);
       return [null, spot] as const;
     } catch (e) {
       // TODO general issue here to handle

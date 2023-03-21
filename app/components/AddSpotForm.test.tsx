@@ -1,7 +1,8 @@
+import type { ErrorCreateSpotForm, Spot } from "../services/createSpotService";
 import { render, screen } from "@testing-library/react";
-import type { ErrorCreateSpotForm, Spot } from "../services/createSpot";
-import type { Props } from "./AddSpotForm";
+
 import { AddSpotForm } from "./AddSpotForm";
+import type { Props } from "./AddSpotForm";
 
 describe("Add", () => {
   const defaultProps: Props = {

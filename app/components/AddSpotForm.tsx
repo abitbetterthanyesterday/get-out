@@ -1,5 +1,5 @@
-import type { Spot } from "~/models/spot";
-import type { ErrorCreateSpotForm } from "../services/createSpot";
+import type { ErrorCreateSpotForm } from "../services/createSpotService";
+import type { Spot } from "~/models/spot.server";
 export interface Props {
   errors?: ErrorCreateSpotForm | null;
   values?: Partial<Spot>;
