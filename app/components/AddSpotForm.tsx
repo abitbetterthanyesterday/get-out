@@ -20,7 +20,7 @@ export enum FormFields {
 
 export function AddSpotForm({ errors, values }: Props) {
   return (
-    <div className="flex flex-col p-24 bg-base-100 rounded-md">
+    <div className="flex flex-col p-8 md:p-24 bg-base-100 rounded-md shadow-sm border box-border">
       <div className="flex-grow-1">
         <h1 className="heading mb-0 text-neutral-focus">
           Add a New Kiting Spot

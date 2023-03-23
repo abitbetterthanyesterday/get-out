@@ -25,7 +25,11 @@ export default function Add() {
     values: Prisma.SpotCreateInput;
   }>();
   return (
-    <Form role="form" method="post" className="w-1/2 mx-auto prose max-w-none">
+    <Form
+      role="form"
+      method="post"
+      className="min-w-[50%] mx-auto prose max-w-none"
+    >
       <AddSpotForm errors={actionData?.errors} values={actionData?.values} />
     </Form>
   );
