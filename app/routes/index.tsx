@@ -9,7 +9,7 @@ export async function loader() {
 export default function Index() {
   const spots = useLoaderData<typeof loader>();
   return (
-    <main className="flex flex-col justify-center h-screen max-w-md gap-12 mx-auto">
+    <main className="flex flex-col justify-center h-screen gap-12 mx-auto">
       <div className="flex flex-col gap-4">
         <h1 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500 text-9xl">
           Get out
