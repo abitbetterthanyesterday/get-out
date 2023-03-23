@@ -3,7 +3,8 @@
   "sideEffects": false,
   "scripts": {
     "build": "npm run build:css && remix build",
-    "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
+    "dev": "concurrently \"npm run dev:css\" \"remix dev\" \"yarn run prisma:studio\"",
+    "prisma:studio": "npx prisma studio",
     "build:css": "postcss ./app/tailwind.css -o .app/tailwind.min.css",
     "dev:css": "postcss ./app/tailwind.css -o ./app/tailwind.min.css --watch",
     "postinstall": "remix setup node",
@@ -12,7 +13,10 @@
     "coverage": "vitest run --coverage",
     "test": "vitest",
     "e2e": "start-server-and-test dev http://localhost:3000 \"npx cypress open\"",
-    "e2e:ci": "start-server-and-test dev http://localhost:3000 \"npx cypress run\""
+    "e2e:ci": "start-server-and-test dev http://localhost:3000 \"npx cypress run\"",
+    "docker:dev": "prisma migrate dev --name docker-dev && yarn run dev",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down --volumes"
   },
   "dependencies": {
    "prisma": "^4.11.0",

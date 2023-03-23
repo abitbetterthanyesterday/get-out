@@ -6,6 +6,7 @@ services:
     container_name: get-out
     ports:
       - "3000:3000"
+      - "5555:5555"
     volumes:
       - ./app:/usr/get-out/app
     depends_on:
@@ -13,12 +14,10 @@ services:
   db:
     image: postgres:latest
     restart: always
-    container_name: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DATABASES=dev,test
+    container_name: db
+    env_file:
+      - .env
     ports:
-      - "5432:5432"
+      - ${POSTGRES_PORT}:5432
     volumes:
       - ./scripts/:/docker-entrypoint-initdb.d
