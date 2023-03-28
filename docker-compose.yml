@@ -16,7 +16,7 @@ services:
     restart: always
     container_name: db
     env_file:
-      - .env
+      - .env.docker
     ports:
       - ${POSTGRES_PORT}:5432
     volumes:
